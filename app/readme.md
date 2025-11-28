@@ -1,188 +1,371 @@
-# 🎬 Movies API Rest - Android App
+# 🎵 Music Discovery - Android App
 
-Aplicación Android nativa desarrollada en **Kotlin** que consume la API de **The Movie Database (TMDB)** para mostrar información de películas en tiempo real.
+<p align="center">
+  <img src="https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white" />
+  <img src="https://img.shields.io/badge/Kotlin-0095D5?style=for-the-badge&logo=kotlin&logoColor=white" />
+  <img src="https://img.shields.io/badge/Material%20Design-757575?style=for-the-badge&logo=material-design&logoColor=white" />
+  <img src="https://img.shields.io/badge/API-TheAudioDB-1DB954?style=for-the-badge" />
+</p>
 
-## 📱 Características
+Aplicación Android nativa tipo **Spotify/Apple Music** desarrollada en **Kotlin** que consume la **TheAudioDB API** para descubrir artistas musicales, álbumes y biografías. Incluye búsqueda en tiempo real, filtros por género y una interfaz moderna inspirada en plataformas de streaming.
 
-- ✅ **Navegación por categorías**: Premieres, Popular, Top Rated, Upcoming
-- 🔍 **Búsqueda en tiempo real**: Encuentra películas mientras escribes
-- ⭐ **Filtro por rating**: Deslizador para filtrar por calificación mínima
-- 🔄 **Ordenamiento múltiple**: Por rating, popularidad o título
-- 🎨 **Interfaz moderna**: Material Design 3 con chips y cards
-- 📊 **Indicadores visuales**: Badges de rating con código de colores
-- 💾 **Arquitectura limpia**: MVVM + Retrofit + Coroutines
+---
 
-## 🛠️ Tecnologías Utilizadas
+## ✨ Características Principales
 
-| Tecnología | Uso |
-|------------|-----|
-| **Kotlin** | Lenguaje principal |
-| **Retrofit** | Cliente HTTP para consumir API REST |
-| **Coroutines** | Programación asíncrona |
-| **MVVM** | Patrón de arquitectura |
-| **Glide** | Carga de imágenes |
-| **Material Design 3** | Componentes UI modernos |
-| **RecyclerView** | Listas eficientes |
-| **ViewBinding** | Binding seguro de vistas |
+| Funcionalidad | Descripción |
+|--------------|-------------|
+| 🎸 **Géneros Musicales** | Rock, Pop, Hip Hop, Electronic |
+| 🔍 **Búsqueda Global** | Encuentra cualquier artista por nombre |
+| 📅 **Filtro por Año** | Descubre artistas desde 1950 hasta hoy |
+| 🔄 **Ordenamiento** | Por nombre, año de formación o país |
+| 🎨 **UI Dinámica** | Colores adaptados según género musical |
+| 🌍 **Banderas de Países** | Identificación visual del origen |
+| 📖 **Biografías** | Info detallada de cada artista |
+| 📱 **Grid Moderno** | Vista tipo galería de 2 columnas |
 
-## 📦 Dependencias Principales
+---
 
-```gradle
-dependencies {
-    // Retrofit para peticiones HTTP
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    
-    // Coroutines para asincronía
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
-    
-    // ViewModel y LiveData
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.2'
-    
-    // Glide para imágenes
-    implementation 'com.github.bumptech.glide:glide:4.16.0'
-    
-    // Material Design
-    implementation 'com.google.android.material:material:1.10.0'
-}
+## 🎯 ¿Qué hace especial esta app?
+
 ```
+✅ NO necesita API Key (TheAudioDB v2 es gratis)
+✅ Datos REALES de artistas famosos
+✅ UI profesional tipo Spotify
+✅ Información rica (biografías, redes sociales, etc)
+✅ Colores dinámicos por género
+✅ Búsqueda de cualquier artista mundial
+```
+
+---
+
+## 🛠️ Stack Tecnológico
+
+### Core
+- **Lenguaje:** Kotlin 1.9+
+- **Min SDK:** 25 (Android 7.1)
+- **Target SDK:** 35 (Android 15)
+- **IDE:** Android Studio Hedgehog 2023.1.1+
+
+### Arquitectura MVVM
+
+```
+Model-View-ViewModel Pattern
+├── Model: ArtistEntity, AlbumEntity
+├── View: MainActivity + AdapterMusic
+└── ViewModel: MusicViewModel (LiveData + Coroutines)
+```
+
+### Dependencias Principales
+
+| Categoría | Librería | Versión | Propósito |
+|-----------|----------|---------|-----------|
+| **Networking** | Retrofit | 2.9.0 | Cliente HTTP REST |
+| | Gson | 2.9.0 | Parseo JSON |
+| **Async** | Coroutines | 1.7.3 | Operaciones asíncronas |
+| **UI** | Material Design 3 | 1.10.0+ | Componentes modernos |
+| | Glide | 4.16.0 | Carga eficiente de imágenes |
+| | RecyclerView | 1.3.2 | Listas optimizadas |
+| **Architecture** | ViewModel | 2.8.7 | Gestión de UI state |
+| | LiveData | 2.8.7 | Datos observables |
+
+---
 
 ## 🚀 Instalación y Configuración
 
-### Prerrequisitos
+### Requisitos Previos
 
-- Android Studio Hedgehog | 2023.1.1 o superior
-- JDK 17 o superior
-- Android SDK API 24+ (Android 7.0+)
-- Cuenta en [TMDB](https://www.themoviedb.org/) para obtener API Key
-
-### Pasos de instalación
-
-1. **Clonar el repositorio**
 ```bash
-git clone https://github.com/TU_USUARIO/movies-api-rest-android.git
-cd movies-api-rest-android
+✅ Android Studio Hedgehog o superior
+✅ JDK 17+
+✅ Android SDK API 35
+✅ NO necesitas API Key (es gratis!)
 ```
 
-2. **Obtener API Key de TMDB**
-    - Regístrate en [TMDB](https://www.themoviedb.org/signup)
-    - Ve a tu perfil → Settings → API
-    - Copia tu API Key (v3 auth)
+### Instalación en 3 Pasos
 
-3. **Configurar API Key**
-
-En `core/Constants.kt`:
-```kotlin
-object Constants {
-    const val API_KEY = "TU_API_KEY_AQUI"
-    const val API_URL = "https://api.themoviedb.org/3/movie/"
-    const val API_URL_IMAGE = "https://image.tmdb.org/t/p/w500"
-}
+**1. Clonar el repositorio**
+```bash
+git clone https://github.com/TU_USUARIO/music-discovery-android.git
+cd music-discovery-android
 ```
 
-4. **Sincronizar el proyecto**
-    - Abre el proyecto en Android Studio
-    - Espera a que Gradle sincronice automáticamente
-    - Si no sincroniza: `File → Sync Project with Gradle Files`
+**2. Abrir en Android Studio**
+```
+File → Open → Selecciona la carpeta
+Espera la sincronización de Gradle
+```
 
-5. **Ejecutar la aplicación**
-    - Conecta un dispositivo Android o inicia un emulador
-    - Click en el botón **Run ▶️** (o `Shift + F10`)
+**3. Ejecutar**
+```bash
+# En Android Studio:
+Build → Clean Project
+Build → Rebuild Project
+Run ▶️ (o Shift + F10)
+```
+
+---
 
 ## 📂 Estructura del Proyecto
 
 ```
-app/
-├── src/main/java/com/inforcap/moviesapirest/
-│   ├── core/
-│   │   └── Constants.kt           # Constantes globales
-│   ├── models/
-│   │   └── MovieEntity.kt         # Modelo de datos
-│   ├── network/
-│   │   ├── ApiService.kt          # Interfaz Retrofit
-│   │   └── response/
-│   │       └── MovieResponse.kt   # Respuesta API
-│   ├── ui/
-│   │   ├── MainActivity.kt        # Actividad principal
-│   │   └── AdapterMovies.kt       # Adaptador RecyclerView
-│   └── viewmodel/
-│       └── MoviesViewModel.kt     # ViewModel MVVM
-├── res/
-│   ├── layout/
-│   │   ├── activity_main.xml      # Layout principal
-│   │   └── item_rvmovie.xml       # Item de película
-│   └── drawable/
-│       └── gradient_overlay.xml   # Gradiente para cards
-└── AndroidManifest.xml
+app/src/main/java/com/inforcap/moviesapirest/
+│
+├── core/
+│   └── Constants.kt                  # Constantes, colores, banderas
+│
+├── models/
+│   ├── ArtistEntity.kt              # Modelo de artista
+│   ├── AlbumEntity.kt               # Modelo de álbum
+│   └── ArtistResponse.kt            # Respuestas de API
+│
+├── network/
+│   └── ApiService.kt                # Endpoints Retrofit
+│
+├── viewmodel/
+│   └── MusicViewModel.kt            # Lógica de negocio
+│
+└── ui/
+    ├── MainActivity.kt              # Activity principal
+    └── AdapterMusic.kt              # Adapter RecyclerView
 ```
 
-## 🎨 Capturas de Pantalla
+---
 
-### Pantalla Principal
-Muestra las películas en un grid de 2 columnas con filtros dinámicos.
+## 🎨 Diseño y UX
 
-### Filtros Activos
-- Barra de búsqueda con filtrado en tiempo real
-- Slider de rating mínimo (0-10)
-- Spinner de ordenamiento
-- Chips de categorías
+### Colores por Género Musical
 
-### Detalle de Película
-Modal con sinopsis completa, rating y popularidad.
+La app cambia colores automáticamente según el género:
 
-## 🔑 Funcionalidades Principales
+| Género | Color | Ejemplo |
+|--------|-------|---------|
+| 🎸 Rock | Rojo | #E74C3C |
+| 🎤 Pop | Púrpura | #9B59B6 |
+| 🎧 Hip Hop | Naranja | #F39C12 |
+| 🎹 Electronic | Azul | #3498DB |
+| 🎺 Jazz | Naranja Oscuro | #D35400 |
+| 🎻 Classical | Violeta | #8E44AD |
 
-### Búsqueda y Filtrado
+### Información por Artista
+
+Cada card muestra:
+- **Imagen oficial** del artista
+- **Nombre** en tipografía destacada
+- **Año de formación** en badge colorido
+- **País de origen** con emoji de bandera
+- **Género musical** (color del badge)
+
+Al hacer click:
+- Biografía del artista
+- Estilo musical
+- Cantidad de miembros
+- Año de formación
+- País de origen
+
+---
+
+## 🌐 API - TheAudioDB
+
+### Endpoints Utilizados
+
 ```kotlin
-private fun applyFilters() {
-    var filteredList = allMovies
+// Buscar artista por nombre
+GET search.php?s={artist_name}
 
-    // Búsqueda por título
-    val searchQuery = binding.searchBar.text.toString().lowercase()
-    if (searchQuery.isNotEmpty()) {
-        filteredList = filteredList.filter { 
-            it.title.lowercase().contains(searchQuery) 
-        }
-    }
+// Obtener álbumes de un artista
+GET album.php?i={artist_id}
 
-    // Filtro por rating mínimo
-    val minRating = binding.ratingSlider.value
-    filteredList = filteredList.filter { 
-        it.rating.toFloatOrNull()?.let { rating -> rating >= minRating } ?: true
+// Búsqueda de álbumes
+GET searchalbum.php?s={artist_name}
+```
+
+### Ejemplo de Respuesta
+
+```json
+{
+  "artists": [
+    {
+      "idArtist": "111239",
+      "strArtist": "Coldplay",
+      "strGenre": "Alternative Rock",
+      "strCountry": "United Kingdom",
+      "intFormedYear": "1996",
+      "strArtistThumb": "https://...",
+      "strBiographyEN": "Coldplay are a British rock band...",
+      "strWebsite": "www.coldplay.com",
+      "strFacebook": "www.facebook.com/coldplay"
     }
-    
-    // Actualizar UI
-    adapterMovies.movieList = filteredList
-    adapterMovies.notifyDataSetChanged()
+  ]
 }
 ```
 
-### Consumo de API con Retrofit
+---
+
+## 🔧 Funcionalidades Clave
+
+### 1. Búsqueda Inteligente
+
 ```kotlin
-suspend fun getAllMovies(apiKey: String): Response<MovieResponse>
-suspend fun getPopular(apiKey: String): Response<MovieResponse>
-suspend fun getTopRated(apiKey: String): Response<MovieResponse>
-suspend fun getUpComing(apiKey: String): Response<MovieResponse>
+// Busca en múltiples campos
+fun searchArtist(query: String) {
+    filteredList = artists.filter { 
+        it.name.contains(query, ignoreCase = true) ||
+        it.genre?.contains(query, ignoreCase = true) == true ||
+        it.country?.contains(query, ignoreCase = true) == true
+    }
+}
 ```
 
-## 🎯 Próximas Mejoras
+### 2. Filtro por Año
 
-- [ ] Agregar modo oscuro
-- [ ] Implementar paginación infinita
-- [ ] Guardar películas favoritas (Room Database)
-- [ ] Compartir películas en redes sociales
-- [ ] Vista detallada con trailer de YouTube
-- [ ] Caché de imágenes offline
-- [ ] Tests unitarios y de UI
+Slider interactivo de 1950 a 2024 para descubrir artistas por época.
 
-## 🤝 Contribuciones
+### 3. Categorías Predefinidas
 
-Las contribuciones son bienvenidas. Por favor:
+**Rock:**
+- Coldplay, Linkin Park, Imagine Dragons, Queen, The Beatles
 
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/NuevaCaracteristica`)
-3. Commit tus cambios (`git commit -m 'Agrega nueva característica'`)
-4. Push a la rama (`git push origin feature/NuevaCaracteristica`)
-5. Abre un Pull Request
+**Pop:**
+- Taylor Swift, Ed Sheeran, Ariana Grande, The Weeknd, Dua Lipa
 
+**Hip Hop:**
+- Eminem, Drake, Kanye West, Kendrick Lamar, Post Malone
+
+**Electronic:**
+- Daft Punk, Calvin Harris, Avicii, David Guetta, Marshmello
+
+---
+
+## 📊 Modelo de Datos
+
+```kotlin
+data class ArtistEntity(
+    var id: String,
+    var name: String,
+    var image: String?,           // Foto principal
+    var logo: String?,            // Logo del artista
+    var genre: String?,           // Género musical
+    var country: String?,         // País de origen
+    var formedYear: String?,      // Año de formación
+    var biography: String?,       // Biografía
+    var style: String?,          // Estilo musical
+    var members: String?,        // Cantidad de miembros
+    var website: String?,        // Sitio web oficial
+    var facebook: String?        // Facebook oficial
+)
+```
+
+---
+
+## 🎯 Roadmap
+
+### Versión 1.1
+- [ ] 🌙 Dark Mode con paleta musical
+- [ ] 💾 Artistas favoritos (Room)
+- [ ] 📱 Vista de álbumes por artista
+- [ ] 🎵 Preview de canciones
+
+### Versión 1.2
+- [ ] 🔍 Filtros avanzados (década, país)
+- [ ] 📊 Top artistas por país
+- [ ] 🎨 Animaciones de transición
+- [ ] 🌐 Más géneros (Jazz, Metal, Country)
+
+### Versión 2.0
+- [ ] 🏗️ Jetpack Compose
+- [ ] 🧪 Unit Tests completos
+- [ ] 🎮 Integración con Spotify API
+- [ ] 📻 Radio por género
+
+---
+
+## 🤝 Contribuir
+
+¡Contribuciones bienvenidas!
+
+```bash
+# 1. Fork el proyecto
+# 2. Crea tu branch
+git checkout -b feature/nueva-funcionalidad
+
+# 3. Commit
+git commit -m '✨ Agrega nueva funcionalidad'
+
+# 4. Push
+git push origin feature/nueva-funcionalidad
+
+# 5. Abre un Pull Request
+```
+
+### Convenciones
+- Usa Kotlin idiomático
+- Sigue Material Design guidelines
+- Documenta funciones complejas
+- Prueba en múltiples dispositivos
+
+---
+
+## 🐛 Reportar Issues
+
+Abre un [Issue](https://github.com/TU_USUARIO/music-discovery-android/issues) incluyendo:
+
+- 📝 Descripción detallada
+- 🔄 Pasos para reproducir
+- 📱 Dispositivo y versión de Android
+- 📸 Screenshots (opcional)
+
+---
+
+## 📄 Licencia
+
+```
+MIT License
+
+Copyright (c) 2025 Cristian
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction.
+```
+
+---
+
+## 👨‍💻 Autor
+
+**Cristian**
+- GitHub: [@Grey-lovelaceK](https://github.com/[TU_USUARIO](https://github.com/Grey-lovelaceK))
+- Email: greyc9404@gmail.com
+- LinkedIn: [Tu perfil](https://linkedin.com/in/cristian-florez-revilla-420b27293)
+
+---
+
+## 🙏 Agradecimientos
+
+- [TheAudioDB](https://www.theaudiodb.com/) - API gratuita de música
+- [Material Design](https://m3.material.io/) - Sistema de diseño
+- [Kotlin Team](https://kotlinlang.org/) - Lenguaje moderno
+- Comunidad Android Developers
+
+---
+
+## 📚 Recursos Útiles
+
+- [TheAudioDB Docs](https://www.theaudiodb.com/api_guide.php)
+- [Retrofit Guide](https://square.github.io/retrofit/)
+- [Kotlin Coroutines](https://kotlinlang.org/docs/coroutines-guide.html)
+- [Material Design 3](https://m3.material.io/)
+
+---
+
+<p align="center">
+  <b>🎵 Descubre música. Descubre artistas. Descubre el mundo. 🌍</b>
+</p>
+
+<p align="center">
+  ⭐ Si te gusta el proyecto, dale una estrella ⭐
+</p>
+
+<p align="center">
+  Made with ❤️ and 🎸 in Chile 🇨🇱
+</p>

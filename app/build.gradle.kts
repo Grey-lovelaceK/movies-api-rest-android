@@ -1,5 +1,3 @@
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -17,17 +15,6 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        // Leer API Key desde local.properties (NO se sube a GitHub)
-        val properties = Properties()
-        val localPropertiesFile = rootProject.file("local.properties")
-        if (localPropertiesFile.exists()) {
-            properties.load(localPropertiesFile.inputStream())
-        }
-
-        // Si existe la API key en local.properties, usarla. Si no, usar valor por defecto
-        val tmdbApiKey = properties.getProperty("tmdb.api.key") ?: "YOUR_API_KEY_HERE"
-        buildConfigField("String", "TMDB_API_KEY", "\"$tmdbApiKey\"")
     }
 
     buildTypes {
@@ -51,7 +38,6 @@ android {
 
     buildFeatures {
         viewBinding = true
-        buildConfig = true  // Necesario para usar BuildConfig
     }
 }
 

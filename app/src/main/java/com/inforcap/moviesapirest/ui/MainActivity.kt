@@ -9,78 +9,115 @@ import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.chip.Chip
-import com.google.android.material.slider.RangeSlider
 import com.inforcap.moviesapirest.R
 import com.inforcap.moviesapirest.core.Constants
 import com.inforcap.moviesapirest.databinding.ActivityMainBinding
-import com.inforcap.moviesapirest.models.MovieEntity
-import com.inforcap.moviesapirest.viewmodel.MoviesViewModel
+import com.inforcap.moviesapirest.models.ArtistEntity
+import com.inforcap.moviesapirest.viewmodel.MusicViewModel
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel: MoviesViewModel
-    private lateinit var adapterMovies: AdapterMovies
+    private lateinit var viewModel: MusicViewModel
+    private lateinit var adapter: AdapterMusica
 
-    private var allMovies: List<MovieEntity> = listOf()
-    private var currentCategory = Constants.CATEGORY_ALLMOVIES
+    private var allArtists: List<ArtistEntity> = listOf()
+    private var currentCategory = Constants.CATEGORY_ROCK
+    private var searchQuery = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this)[MoviesViewModel::class.java]
+        viewModel = ViewModelProvider(this)[MusicViewModel::class.java]
 
         initRecyclerView()
         setupSearchBar()
-        setupRatingFilter()
+        setupYearFilter()
         setupSortSpinner()
         setupCategoryChips()
 
-        // Cargar películas por defecto
+        // Cargar artistas por defecto
         binding.tvCategory.text = currentCategory
-        viewModel.getAllMovies()
+        viewModel.getRockArtists()
 
-        // Observer
-        viewModel.movieList.observe(this) { movies ->
-            allMovies = movies
+        // Observers
+        viewModel.artistList.observe(this) { artists ->
+            allArtists = artists
             applyFilters()
-            binding.progressBar.visibility = View.GONE
-            binding.rvMovies.visibility = View.VISIBLE
+        }
+
+        viewModel.isLoading.observe(this) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding.rvMovies.visibility = if (isLoading) View.GONE else View.VISIBLE
+        }
+
+        viewModel.error.observe(this) { error ->
+            error?.let {
+                binding.tvNoResults.text = it
+                binding.tvNoResults.visibility = View.VISIBLE
+            }
         }
     }
 
     private fun initRecyclerView() {
-        val layoutManager = GridLayoutManager(this, 2) // Cambié a 2 columnas para mejor visualización
+        val layoutManager = GridLayoutManager(this, 2)
         binding.rvMovies.layoutManager = layoutManager
-        adapterMovies = AdapterMovies(this, arrayListOf())
-        binding.rvMovies.adapter = adapterMovies
+        adapter = AdapterMusica(this, arrayListOf())
+        binding.rvMovies.adapter = adapter
     }
 
     private fun setupSearchBar() {
+        binding.searchBar.hint = "Buscar artista..."
+
         binding.searchBar.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                applyFilters()
+                searchQuery = s.toString()
+
+                if (searchQuery.length >= 3) {
+
+                } else {
+
+                    applyFilters()
+                }
             }
             override fun afterTextChanged(s: Editable?) {}
         })
+
+
+        binding.searchBar.setOnEditorActionListener { _, _, _ ->
+            if (searchQuery.isNotEmpty()) {
+                viewModel.searchArtist(searchQuery)
+            }
+            false
+        }
     }
 
-    private fun setupRatingFilter() {
+    private fun setupYearFilter() {
+        binding.ratingSlider.valueFrom = 1950f
+        binding.ratingSlider.valueTo = 2024f
+        binding.ratingSlider.value = 1950f
+        binding.tvRatingValue.text = "Año mínimo: 1950"
+
         binding.ratingSlider.addOnChangeListener { slider, value, fromUser ->
-            binding.tvRatingValue.text = "Rating mínimo: ${String.format("%.1f", value)}"
+            binding.tvRatingValue.text = "Año mínimo: ${value.toInt()}"
             applyFilters()
         }
     }
 
     private fun setupSortSpinner() {
-        val sortOptions = arrayOf("Sin ordenar", "Rating (Mayor a Menor)", "Rating (Menor a Mayor)",
-            "Popularidad (Mayor a Menor)", "Título (A-Z)")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, sortOptions)
-        binding.sortSpinner.adapter = adapter
+        val sortOptions = arrayOf(
+            "Sin ordenar",
+            "Nombre (A-Z)",
+            "Nombre (Z-A)",
+            "Año (Más reciente)",
+            "Año (Más antiguo)",
+            "País (A-Z)"
+        )
+        val adapterSpinner = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, sortOptions)
+        binding.sortSpinner.adapter = adapterSpinner
 
         binding.sortSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -91,10 +128,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupCategoryChips() {
-        binding.chipPremiere.setOnClickListener { loadCategory(Constants.CATEGORY_ALLMOVIES) { viewModel.getAllMovies() } }
-        binding.chipPopular.setOnClickListener { loadCategory(Constants.CATEGORY_POPULARITY) { viewModel.getPopular() } }
-        binding.chipTopRated.setOnClickListener { loadCategory(Constants.CATEGORY_TOPRATED) { viewModel.getTopRated() } }
-        binding.chipUpcoming.setOnClickListener { loadCategory(Constants.CATEGORY_UPCOMING) { viewModel.getUpComing() } }
+        binding.chipPremiere.text = "🎸 Rock"
+        binding.chipPopular.text = "🎤 Pop"
+        binding.chipTopRated.text = "🎧 Hip Hop"
+        binding.chipUpcoming.text = "🎹 Electronic"
+
+        binding.chipPremiere.setOnClickListener {
+            loadCategory(Constants.CATEGORY_ROCK) { viewModel.getRockArtists() }
+        }
+        binding.chipPopular.setOnClickListener {
+            loadCategory(Constants.CATEGORY_POP) { viewModel.getPopArtists() }
+        }
+        binding.chipTopRated.setOnClickListener {
+            loadCategory(Constants.CATEGORY_HIPHOP) { viewModel.getHipHopArtists() }
+        }
+        binding.chipUpcoming.setOnClickListener {
+            loadCategory(Constants.CATEGORY_ELECTRONIC) { viewModel.getElectronicArtists() }
+        }
     }
 
     private fun loadCategory(category: String, loadAction: () -> Unit) {
@@ -103,14 +153,15 @@ class MainActivity : AppCompatActivity() {
             binding.tvCategory.text = category
             binding.progressBar.visibility = View.VISIBLE
             binding.rvMovies.visibility = View.GONE
+            binding.tvNoResults.visibility = View.GONE
 
-            // Actualizar estado de chips
+
             binding.chipGroupCategories.clearCheck()
             when(category) {
-                Constants.CATEGORY_ALLMOVIES -> binding.chipPremiere.isChecked = true
-                Constants.CATEGORY_POPULARITY -> binding.chipPopular.isChecked = true
-                Constants.CATEGORY_TOPRATED -> binding.chipTopRated.isChecked = true
-                Constants.CATEGORY_UPCOMING -> binding.chipUpcoming.isChecked = true
+                Constants.CATEGORY_ROCK -> binding.chipPremiere.isChecked = true
+                Constants.CATEGORY_POP -> binding.chipPopular.isChecked = true
+                Constants.CATEGORY_HIPHOP -> binding.chipTopRated.isChecked = true
+                Constants.CATEGORY_ELECTRONIC -> binding.chipUpcoming.isChecked = true
             }
 
             loadAction()
@@ -118,36 +169,39 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun applyFilters() {
-        var filteredList = allMovies
+        var filteredList = allArtists
 
-        // Filtro de búsqueda
-        val searchQuery = binding.searchBar.text.toString().lowercase()
+
         if (searchQuery.isNotEmpty()) {
             filteredList = filteredList.filter {
-                it.title.lowercase().contains(searchQuery)
+                it.name.lowercase().contains(searchQuery.lowercase()) ||
+                        it.genre?.lowercase()?.contains(searchQuery.lowercase()) == true ||
+                        it.country?.lowercase()?.contains(searchQuery.lowercase()) == true
             }
         }
 
-        // Filtro de rating
-        val minRating = binding.ratingSlider.value
+
+        val minYear = binding.ratingSlider.value.toInt()
         filteredList = filteredList.filter {
-            it.rating.toFloatOrNull()?.let { rating -> rating >= minRating } ?: true
+            it.formedYear?.toIntOrNull()?.let { year -> year >= minYear } ?: true
         }
 
-        // Ordenamiento
+
         filteredList = when (binding.sortSpinner.selectedItemPosition) {
-            1 -> filteredList.sortedByDescending { it.rating.toFloatOrNull() ?: 0f }
-            2 -> filteredList.sortedBy { it.rating.toFloatOrNull() ?: 0f }
-            3 -> filteredList.sortedByDescending { it.popularity.toFloatOrNull() ?: 0f }
-            4 -> filteredList.sortedBy { it.title }
+            1 -> filteredList.sortedBy { it.name }
+            2 -> filteredList.sortedByDescending { it.name }
+            3 -> filteredList.sortedByDescending { it.formedYear?.toIntOrNull() ?: 0 }
+            4 -> filteredList.sortedBy { it.formedYear?.toIntOrNull() ?: 9999 }
+            5 -> filteredList.sortedBy { it.country ?: "ZZZ" }
             else -> filteredList
         }
 
-        // Actualizar adapter
-        adapterMovies.movieList = filteredList
-        adapterMovies.notifyDataSetChanged()
+        adapter.artistList = filteredList
+        adapter.notifyDataSetChanged()
 
-        // Mostrar mensaje si no hay resultados
         binding.tvNoResults.visibility = if (filteredList.isEmpty()) View.VISIBLE else View.GONE
+        if (filteredList.isEmpty()) {
+            binding.tvNoResults.text = "😔 No se encontraron artistas"
+        }
     }
 }
